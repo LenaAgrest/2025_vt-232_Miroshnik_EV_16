@@ -4,6 +4,7 @@
 #include <ctime>
 #include <Windows.h>
 #include "SmartPointer.h"
+#include <filesystem>
 
 class Logger {
 private:
@@ -20,9 +21,14 @@ private:
     }
 
 public:
-    Logger(const std::string& filename) : path(filename) {
+    Logger(const std::string& /*filename*/) {
+        std::string exePath = std::filesystem::current_path().string(); // путь к .exe
+        path = exePath + "\\log.txt"; // лог в папке проекта
+
         logFile.open(path, std::ios::out | std::ios::app);
-        logFile << "Наблюдение начато...\n";
+        if (logFile.is_open()) {
+            logFile << "Наблюдение начато...\n";
+        }
     }
 
     ~Logger() {

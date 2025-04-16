@@ -123,8 +123,6 @@ namespace My2025vt232MiroshnikEV16 {
 				std::string logFile = msclr::interop::marshal_as<std::string>(currentPath + "\\log.txt");
 				logger = new SmartPointer<Logger>(new Logger(logFile));
 
-				//logBox->AppendText("Наблюдение начато...\r\n");
-
 				// Настройка наблюдения
 				watcher->Path = currentPath;
 				watcher->EnableRaisingEvents = true;
@@ -150,6 +148,9 @@ namespace My2025vt232MiroshnikEV16 {
 				if (logger) {
 					logger->get()->LogRaw("Наблюдение начато...");
 				}
+			}
+			else { 
+				logBox->AppendText("Наблюдение начато...\r\n"); 
 			}
 		}
 

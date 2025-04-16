@@ -29,8 +29,5 @@
     <ClInclude Include="Logger.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="DirectoryWatcher.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

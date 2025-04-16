@@ -122,7 +122,6 @@
     <ClCompile Include="MyForm.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DirectoryWatcher.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="MyForm.h">
       <FileType>CppForm</FileType>
