@@ -123,7 +123,7 @@ namespace My2025vt232MiroshnikEV16 {
 				std::string logFile = msclr::interop::marshal_as<std::string>(currentPath + "\\log.txt");
 				logger = new SmartPointer<Logger>(new Logger(logFile));
 
-				logBox->AppendText("Наблюдение начато...\r\n");
+				//logBox->AppendText("Наблюдение начато...\r\n");
 
 				// Настройка наблюдения
 				watcher->Path = currentPath;
@@ -132,6 +132,9 @@ namespace My2025vt232MiroshnikEV16 {
 
 				watcher->Created += gcnew FileSystemEventHandler(this, &MyForm::OnCreated);
 				watcher->Renamed += gcnew RenamedEventHandler(this, &MyForm::OnRenamed);
+				watcher->Deleted += gcnew FileSystemEventHandler(this, &MyForm::OnDeleted);
+				watcher->Changed += gcnew FileSystemEventHandler(this, &MyForm::OnChanged);
+
 			}
 		}
 
@@ -175,7 +178,29 @@ namespace My2025vt232MiroshnikEV16 {
 		}
 
 		void AppendLog(String^ text) {
-			logBox->AppendText(text + "\r\n");
+			DateTime now = DateTime::Now;
+			String^ timestamp = now.ToString("[HH:mm:ss dd:MM:yyyy] ");
+			logBox->AppendText(timestamp + text + "\r\n");
 		}
+
+		void OnDeleted(Object^ sender, FileSystemEventArgs^ e) {
+			String^ type = Directory::Exists(e->FullPath) ? "Удалена папка" : "Удалён файл";
+			String^ msg = String::Format("{0} \"{1}\"", type, e->Name);
+
+			logBox->Invoke(gcnew Action<String^>(this, &MyForm::AppendLog), msg);
+			if (logger) logger->get()->Log(msclr::interop::marshal_as<std::string>(msg));
+		}
+
+		void OnChanged(Object^ sender, FileSystemEventArgs^ e) {
+			// Защита от срабатываний на папки
+			if (Directory::Exists(e->FullPath)) return;
+
+			String^ msg = String::Format("Изменён файл \"{0}\"", e->Name);
+
+			logBox->Invoke(gcnew Action<String^>(this, &MyForm::AppendLog), msg);
+			if (logger) logger->get()->Log(msclr::interop::marshal_as<std::string>(msg));
+		}
+
+
 	};
 }
